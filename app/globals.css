@@ -1,0 +1,200 @@
+@import "tailwindcss";
+
+/* ==========================================================================
+   Atithideva design tokens
+   Change the values in this block to re-theme the entire website.
+   Every colour, radius and shadow used across the site resolves back to here.
+   ========================================================================== */
+
+@theme {
+  /* --- Surfaces ------------------------------------------------------------
+     Cool near-white base with a whisper of ice-blue (client-specified
+     rgb(218 241 255 / 3%) wash over white), paired with navy for buttons. */
+  --color-ivory: #f8fafd;
+  --color-paper: #ffffff;
+  --color-sand: #e9f2fb;
+  --color-linen: #d8e2ec;
+  --color-linen-soft: #e6edf5;
+
+  /* --- Ink --------------------------------------------------------------- */
+  --color-ink: #161c22;
+  --color-ink-70: #46525c;
+  --color-ink-50: #78838d;
+  --color-ink-30: #a7b0b8;
+
+  /* --- Accents ----------------------------------------------------------- */
+  --color-brass: #96762f;
+  --color-brass-soft: #c9ae73;
+  --color-brass-wash: #f3ead6;
+
+  /* --- Brand navy (client-specified button colour, sampled #193a6b) ------ */
+  --color-navy: #193a6b;
+  --color-navy-deep: #102748;
+  --color-navy-soft: #3f5f8f;
+  --color-navy-wash: #e6ecf4;
+
+  /* --- Operational status colours (mirrors the PMS room states) ---------- */
+  --color-state-available: #5c6e4c;
+  --color-state-available-wash: #e7ecdf;
+  --color-state-occupied: #96762f;
+  --color-state-occupied-wash: #f3ead6;
+  --color-state-cleaning: #46606e;
+  --color-state-cleaning-wash: #e2eaee;
+  --color-state-maintenance: #a0543c;
+  --color-state-maintenance-wash: #f2e3dd;
+
+  /* --- Type -------------------------------------------------------------- */
+  --font-display: var(--font-fraunces), ui-serif, Georgia, serif;
+  --font-sans: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
+
+  --text-display: 4.25rem;
+  --text-display--line-height: 1.02;
+  --text-display--letter-spacing: -0.028em;
+
+  /* --- Elevation --------------------------------------------------------- */
+  --shadow-lift: 0 1px 2px rgba(25, 31, 28, 0.04), 0 8px 24px -12px rgba(25, 31, 28, 0.14);
+  --shadow-panel: 0 2px 4px rgba(25, 31, 28, 0.03), 0 28px 60px -30px rgba(25, 31, 28, 0.28);
+  --shadow-float: 0 1px 2px rgba(25, 31, 28, 0.05), 0 18px 40px -20px rgba(25, 31, 28, 0.24);
+
+  /* --- Motion ------------------------------------------------------------ */
+  --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* ==========================================================================
+   Base
+   ========================================================================== */
+
+@layer base {
+  * {
+    border-color: var(--color-linen);
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--color-ivory);
+    color: var(--color-ink-70);
+    font-family: var(--font-sans);
+    font-feature-settings: "ss01", "ss03";
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    overflow-x: hidden;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    color: var(--color-ink);
+    font-family: var(--font-display);
+    font-variation-settings: "SOFT" 18, "WONK" 1;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  ::selection {
+    background-color: var(--color-brass-soft);
+    color: var(--color-ink);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-brass);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  /* Numbers inside product mockups and metrics stay column-aligned. */
+  [data-numeric] {
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.01em;
+  }
+}
+
+/* ==========================================================================
+   Utilities
+   ========================================================================== */
+
+@utility shell {
+  margin-inline: auto;
+  width: 100%;
+  max-width: 78rem;
+  padding-inline: 1.5rem;
+
+  @media (min-width: 1024px) {
+    padding-inline: 2.5rem;
+  }
+}
+
+/* Optical sizing for large display type: Fraunces gets tighter, higher-contrast
+   serifs at display sizes and softer, more open shapes at small sizes. */
+@utility optical-display {
+  font-variation-settings: "opsz" 144, "SOFT" 14, "WONK" 1;
+}
+
+@utility optical-text {
+  font-variation-settings: "opsz" 20, "SOFT" 30, "WONK" 0;
+}
+
+/* The thin rule + small marker used to open a section. */
+@utility rule-top {
+  border-top: 1px solid var(--color-linen);
+}
+
+@utility grain {
+  position: relative;
+}
+
+@utility grain-layer {
+  background-image: radial-gradient(circle at 1px 1px, rgba(25, 31, 28, 0.055) 1px, transparent 0);
+  background-size: 4px 4px;
+}
+
+/* ==========================================================================
+   Motion
+   ========================================================================== */
+
+@keyframes atd-sweep {
+  0% {
+    transform: translateX(-120%);
+  }
+  100% {
+    transform: translateX(320%);
+  }
+}
+
+@keyframes atd-pulse-dot {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.35;
+    transform: scale(0.82);
+  }
+}
+
+.atd-live-dot {
+  animation: atd-pulse-dot 2.4s var(--ease-out-soft) infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}

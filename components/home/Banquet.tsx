@@ -18,7 +18,7 @@ export function Banquet() {
   return (
     <section
       id="banquets"
-      className="scroll-mt-24 bg-ink py-12 text-ivory sm:py-16 lg:py-20"
+      className="scroll-mt-24 bg-ink py-10 text-ivory sm:py-12 lg:py-14"
     >
       <Container>
         <div className="max-w-2xl">
@@ -37,7 +37,7 @@ export function Banquet() {
         </div>
 
         {/* Pipeline */}
-        <ol className="mt-14 grid gap-px overflow-hidden rounded-xl border border-ivory/12 bg-ivory/12 sm:grid-cols-2 lg:mt-16 lg:grid-cols-4">
+        <ol className="mt-8 grid gap-px overflow-hidden rounded-xl border border-ivory/12 bg-ivory/12 sm:grid-cols-2 lg:mt-16 lg:grid-cols-4">
           {banquetStages.map((stage, index) => (
             <li key={stage.label} className="bg-ink p-5 sm:p-6">
               <Reveal index={index % 4}>

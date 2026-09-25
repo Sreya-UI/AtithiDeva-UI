@@ -19,7 +19,7 @@ export function Finance() {
   return (
     <section
       id="finance"
-      className="scroll-mt-24 border-t border-linen py-12 sm:py-16 lg:py-20"
+      className="scroll-mt-24 border-t border-linen py-10 sm:py-12 lg:py-14"
     >
       <Container>
         <SectionHeading
@@ -34,7 +34,7 @@ export function Finance() {
           }
         />
 
-        <div className="mt-14 grid gap-5 lg:mt-16 lg:grid-cols-3">
+        <div className="mt-8 grid gap-5 lg:mt-16 lg:grid-cols-3">
           {/* Revenue */}
           <Reveal className="lg:col-span-2">
             <div className="h-full rounded-xl border border-linen bg-paper p-6 shadow-lift sm:p-7">

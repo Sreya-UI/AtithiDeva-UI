@@ -7,7 +7,7 @@ export function Housekeeping() {
   return (
     <section
       id="housekeeping"
-      className="scroll-mt-24 border-t border-linen py-12 sm:py-16 lg:py-20"
+      className="scroll-mt-24 border-t border-linen py-10 sm:py-12 lg:py-14"
     >
       <Container>
         <SectionHeading
@@ -22,7 +22,7 @@ export function Housekeeping() {
           }
         />
 
-        <ol className="mt-14 grid gap-y-8 sm:grid-cols-2 lg:mt-16 lg:grid-cols-4">
+        <ol className="mt-8 grid gap-y-8 sm:grid-cols-2 lg:mt-16 lg:grid-cols-4">
           {housekeepingSteps.map((step, index) => {
             const isLast = index === housekeepingSteps.length - 1;
             return (

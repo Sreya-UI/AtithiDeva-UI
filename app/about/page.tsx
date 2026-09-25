@@ -43,7 +43,7 @@ export default function AboutPage() {
         lede="AtithiDeva came out of the operational details that decide whether a hotel's evening goes smoothly: who is arriving, which rooms are back, what the folio owes, and whether the day closed clean."
       />
 
-      <Section tone="ivory">
+      <Section tone="ivory" className="py-16 sm:py-20 lg:py-24">
         <Container>
           <div className="grid gap-14 lg:grid-cols-12">
             <div className="lg:col-span-5">
@@ -55,12 +55,17 @@ export default function AboutPage() {
             </div>
 
             <div className="lg:col-span-7">
-              <ul className="grid gap-px overflow-hidden rounded-2xl border border-linen bg-linen sm:grid-cols-2">
+              <ul className="grid gap-4 sm:grid-cols-2">
                 {beliefs.map((belief, index) => (
-                  <li key={belief.title} className="bg-paper">
-                    <Reveal index={index % 2} className="h-full p-7 lg:p-8">
-                      <h2 className="optical-text text-[1.14rem] font-medium">{belief.title}</h2>
-                      <p className="mt-3 text-[0.92rem] leading-[1.65] text-ink-70">
+                  <li key={belief.title} className="flex">
+                    <Reveal index={index % 2} className="flex h-full w-full flex-col rounded-2xl border border-linen bg-paper p-7 lg:p-8 shadow-sm transition-all duration-300 hover:shadow-xl hover:border-brass-soft/70 hover:-translate-y-1">
+                      <div className="flex items-center justify-between">
+                        <span className="font-display text-[1.3rem] font-bold text-brass">
+                          {String(index + 1).padStart(2, "0")}
+                        </span>
+                      </div>
+                      <h2 className="optical-text mt-3 text-[1.18rem] font-bold text-ink">{belief.title}</h2>
+                      <p className="mt-3 text-[0.93rem] leading-[1.65] text-ink-70 flex-1">
                         {belief.body}
                       </p>
                     </Reveal>
@@ -72,16 +77,18 @@ export default function AboutPage() {
         </Container>
       </Section>
 
-      <Section tone="paper" rule>
+      <Section tone="paper" rule className="py-16 sm:py-20">
         <Container>
-          <div className="max-w-2xl">
+          <div className="max-w-2xl rounded-3xl border border-brass-soft/40 bg-gradient-to-br from-brass-wash/50 via-paper to-sand/40 p-8 sm:p-12 shadow-panel">
             <SectionHeading
               marker="What we publish"
               title="No numbers we cannot stand behind."
-              lede="You will not find customer counts, hours saved or revenue lifted on this site. The figures inside the product visuals are sample data, labelled as such, and everything described in the modules is something the system does."
+              lede="You will not find inflated customer counts, hours saved or revenue lifted on this site. The figures inside the product visuals are sample data, labelled as such, and everything described in the modules is something the system does."
             />
             <Reveal index={3} className="mt-9">
-              <ButtonLink href="/contact">Ask us anything</ButtonLink>
+              <ButtonLink href="/contact" className="shadow-[0_4px_14px_rgba(25,58,107,0.35)]">
+                Ask us anything
+              </ButtonLink>
             </Reveal>
           </div>
         </Container>

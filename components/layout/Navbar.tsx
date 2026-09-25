@@ -19,13 +19,12 @@ export function Navbar() {
   const toggleRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 24);
+    const onScroll = () => setScrolled(window.scrollY > 20);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // Escape closes; focus returns to the toggle. Body scroll is locked while open.
   const close = useCallback(() => {
     setOpen(false);
     toggleRef.current?.focus();
@@ -51,9 +50,9 @@ export function Navbar() {
   return (
     <header
       className={cn(
-        "fixed inset-x-0 top-0 z-50 transition-[background-color,border-color,box-shadow,backdrop-filter] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]",
+        "fixed inset-x-0 top-0 z-50 transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]",
         scrolled || open
-          ? "border-b border-linen bg-ivory/85 backdrop-blur-md"
+          ? "border-b border-brass-soft/25 bg-ivory/85 backdrop-blur-md shadow-[0_4px_20px_-8px_rgba(16,39,72,0.07)]"
           : "border-b border-transparent bg-transparent",
       )}
     >
@@ -69,15 +68,15 @@ export function Navbar() {
                   href={link.href}
                   aria-current={active ? "page" : undefined}
                   className={cn(
-                    "relative rounded-full px-4 py-2 text-[1.05rem] font-medium transition-colors duration-200",
-                    active ? "text-ink" : "text-ink-70 hover:text-ink",
+                    "relative rounded-full px-4 py-2 text-[1rem] font-medium transition-all duration-200",
+                    active ? "text-ink font-semibold" : "text-ink-70 hover:text-ink hover:bg-paper/60",
                   )}
                 >
                   {link.label}
                   <span
                     aria-hidden
                     className={cn(
-                      "absolute inset-x-3.5 -bottom-0.5 h-px origin-left bg-brass transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]",
+                      "absolute inset-x-3 -bottom-0.5 h-[2px] rounded-full bg-gradient-to-r from-brass-soft via-brass to-brass-soft transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]",
                       active ? "scale-x-100" : "scale-x-0",
                     )}
                   />
@@ -87,14 +86,9 @@ export function Navbar() {
           })}
         </ul>
 
-        <div className="hidden items-center gap-2 lg:flex">
-          <Link
-            href="/login"
-            className="rounded-full px-4 py-2 text-[1rem] font-medium text-ink-70 transition-colors hover:text-ink"
-          >
-            Login
-          </Link>
-          <ButtonLink href="/register" size="md">
+        <div className="hidden items-center gap-2.5 lg:flex">
+          
+          <ButtonLink href="/register" size="md" className="shadow-[0_4px_14px_rgba(25,58,107,0.35)] hover:shadow-[0_6px_20px_rgba(25,58,107,0.45)]">
             Add your property
           </ButtonLink>
         </div>
@@ -141,14 +135,7 @@ export function Navbar() {
                 <ButtonLink href="/register" onClick={() => setOpen(false)} className="w-full">
                   Add your property
                 </ButtonLink>
-                <ButtonLink
-                  href="/login"
-                  onClick={() => setOpen(false)}
-                  variant="secondary"
-                  className="w-full"
-                >
-                  Login
-                </ButtonLink>
+                
               </div>
             </div>
           </motion.div>

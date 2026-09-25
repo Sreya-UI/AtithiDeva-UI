@@ -19,6 +19,13 @@ export const site = {
     addressCountry: "IN",
   },
   ogImage: "/opengraph-image",
+  social: {
+    facebook: "https://facebook.com/atithideva",
+    instagram: "https://instagram.com/atithideva",
+    whatsapp: "https://wa.me/910000000000",
+    linkedin: "https://linkedin.com/company/atithideva",
+    youtube: "https://youtube.com/@atithideva",
+  },
 } as const;
 
 export type Site = typeof site;

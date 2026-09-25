@@ -1,3 +1,4 @@
+import { Marquee } from "@/components/home/Marquee";
 import { Banquet } from "@/components/home/Banquet";
 import { Billing } from "@/components/home/Billing";
 import { BookingFlow } from "@/components/home/BookingFlow";
@@ -22,6 +23,7 @@ export default function HomePage() {
   return (
     <>
       <Hero />
+      <Marquee />
       <Principles />
       <HotelShowcase />
       <QuotationFlow />

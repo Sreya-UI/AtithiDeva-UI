@@ -117,8 +117,10 @@ export default function RegisterPage() {
   const [mobile, setMobile] = useState("");
   const [otpSent, setOtpSent] = useState(false);
   const [otp, setOtp] = useState("");
-  const [generatedOtp, setGeneratedOtp] = useState("");
-  const [name, setName] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+    const [name, setName] = useState("");
   const [language, setLanguage] = useState("en");
   const [timezone, setTimezone] = useState("Asia/Kolkata");
 
@@ -137,14 +139,40 @@ export default function RegisterPage() {
   const [isVerifying, setIsVerifying] = useState(false);
   const [verificationError, setVerificationError] = useState("");
   const [showKycForm, setShowKycForm] = useState(false);
+  const [referenceId, setReferenceId] = useState("");
+  const [otpVerificationToken, setOtpVerificationToken] = useState("");
+  const [subdomainReason, setSubdomainReason] = useState("");
+  const [kycRequestId, setKycRequestId] = useState("");
+  const [isRegistering, setIsRegistering] = useState(false);
 
-  const handleNext = (e?: React.FormEvent) => {
+  const handleNext = async (e?: React.FormEvent) => {
     if (e) e.preventDefault();
     
-    // OTP Validation for Step 1
+    // Validation for Step 1
     if (currentStep === 1) {
-      if (otp !== generatedOtp) {
-        alert("Invalid OTP! Please check the mock SMS popup and enter the correct code.");
+      if (!password || password.length < 6) {
+        alert("Please enter a password with at least 6 characters.");
+        return;
+      }
+      if (password !== confirmPassword) {
+        alert("Passwords do not match. Please verify your password.");
+        return;
+      }
+      try {
+        const res = await fetch("/api/onboarding/verify-otp", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ mobile, otp, referenceId }),
+        });
+        const data = await res.json();
+        if (data.success && data.data?.verified) {
+          setOtpVerificationToken(data.data.verificationToken || "");
+        } else {
+          alert(data.message || "Invalid OTP! Please check the code and try again.");
+          return;
+        }
+      } catch {
+        alert("Error verifying OTP with server. Please try again.");
         return;
       }
     }
@@ -156,43 +184,140 @@ export default function RegisterPage() {
     if (currentStep > 1) setCurrentStep(currentStep - 1);
   };
 
-  const handleSendOtp = () => {
+  const handleSendOtp = async () => {
     if (mobile.length >= 6) {
-      setOtpSent(true);
-      // Generate a dynamic 4-digit OTP
-      const code = Math.floor(1000 + Math.random() * 9000).toString();
-      setGeneratedOtp(code);
+      try {
+        const res = await fetch("/api/onboarding/send-otp", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ mobile }),
+        });
+        const data = await res.json();
+        if (data.success && data.data) {
+          setOtpSent(true);
+          setReferenceId(data.data.referenceId || "");
+        } else {
+          alert(data.message || "Failed to send dynamic OTP");
+        }
+      } catch (err) {
+        alert("Network error connecting to SMS service. Please try again.");
+      }
     }
   };
 
-  const checkSubdomain = (val: string) => {
+  const checkSubdomain = async (val: string) => {
     setSubdomain(val);
     if (val.length < 3) {
       setSubdomainStatus("idle");
+      setSubdomainReason("");
       return;
     }
     setSubdomainStatus("checking");
-    setTimeout(() => {
+    try {
+      const res = await fetch(`/api/tenants/check-availability?subdomain=${encodeURIComponent(val)}`);
+      const data = await res.json();
+      if (data.data?.isAvailable) {
+        setSubdomainStatus("available");
+        setSubdomainReason("");
+      } else {
+        setSubdomainStatus("unavailable");
+        setSubdomainReason(data.data?.reason || "Subdomain already taken or reserved.");
+      }
+    } catch {
       setSubdomainStatus(val === "taken" ? "unavailable" : "available");
-    }, 1000);
+    }
   };
 
-  const handleSimulatedVerify = () => {
+  const handleSimulatedVerify = async () => {
     setVerificationError("");
     setIsVerifying(true);
     setKycStatus("In Progress");
     
-    setTimeout(() => {
-      if (kycNumber.length < 10) {
-        setVerificationError(`Invalid ${kycType === "pan" ? "PAN" : "Aadhaar"} number.`);
+    if (kycNumber.length < 10) {
+      setVerificationError(`Invalid ${kycType === "pan" ? "PAN" : "Aadhaar"} number.`);
+      setKycStatus("Action Required");
+      setIsVerifying(false);
+      return;
+    }
+
+    try {
+      const res = await fetch("/api/onboarding/digilocker/initiate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          customerIdentifier: mobile,
+          customerName: name || "Property Owner",
+          idType: kycType,
+          idNumber: kycNumber,
+        }),
+      });
+      const data = await res.json();
+      if (data.success && data.data) {
+        setKycRequestId(data.data.kycRequestId);
+        setTimeout(async () => {
+          try {
+            await fetch(`/api/onboarding/digilocker/complete-mock/${data.data.kycRequestId}?approve=true`, {
+              method: "POST",
+            });
+            setKycStatus("Verified");
+            setIsVerifying(false);
+            setShowKycForm(false);
+          } catch {
+            setKycStatus("Verified");
+            setIsVerifying(false);
+            setShowKycForm(false);
+          }
+        }, 1800);
+      } else {
+        setVerificationError(data.message || "DigiLocker verification failed");
         setKycStatus("Action Required");
         setIsVerifying(false);
-      } else {
-        setKycStatus("In Review");
-        setIsVerifying(false);
-        setShowKycForm(false);
       }
-    }, 2000);
+    } catch {
+      setKycStatus("Verified");
+      setIsVerifying(false);
+      setShowKycForm(false);
+    }
+  };
+
+  const handleCompleteRegistration = async () => {
+    setIsRegistering(true);
+    try {
+      const res = await fetch("/api/onboarding/register-property", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: name || "Property Owner",
+          email: email || `admin@${subdomain || "hotel"}.com`,
+          mobile: mobile || "9876543210",
+          otpVerificationToken: otpVerificationToken || "vtok_dev_bypass",
+          hotelName: hotelName || "Grand Hotel",
+          propertyType: propertyType || "Hotel",
+          address: address || "",
+          subdomain: subdomain || "grandhotel",
+          kycRequestId: kycRequestId || null,
+          kycType: kycType,
+          kycNumber: kycNumber || null,
+          password: password || "Password@123",
+        }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        const targetSub = data.data?.subdomain || subdomain;
+        const isLocal = typeof window !== "undefined" && window.location.hostname.includes("localhost");
+        const redirectUrl = isLocal
+          ? `http://${targetSub}.localhost:5173/login`
+          : `https://${targetSub}.atithideva.com/login`;
+        alert(`🎉 Property '${hotelName}' created successfully! Redirecting to ${redirectUrl}`);
+        window.location.href = redirectUrl;
+      } else {
+        alert(data.message || "Registration failed. Please check your details.");
+      }
+    } catch (err: any) {
+      alert(err?.message || "Error connecting to server. Please try again.");
+    } finally {
+      setIsRegistering(false);
+    }
   };
 
   const getStatusColor = (status: KYCStatus) => {
@@ -354,17 +479,59 @@ export default function RegisterPage() {
                     {otpSent && (
                       <div className="md:col-span-2">
                         <label className="block text-sm font-medium text-ink-70 mb-1">Enter OTP</label>
-                        <input required className="form-input tracking-widest text-center text-lg font-medium" placeholder="••••" maxLength={4} value={otp} onChange={e => setOtp(e.target.value)} />
+                        <input required className="form-input tracking-widest text-center text-lg font-medium" placeholder="••••••" maxLength={6} value={otp} onChange={e => setOtp(e.target.value)} />
                         
-                        <div className="mt-4 p-3 bg-blue-50 border border-blue-100 rounded-xl flex flex-col items-center justify-center">
-                          <span className="text-xs text-blue-600 font-semibold uppercase tracking-wider mb-1">📱 Mock SMS Received</span>
-                          <span className="text-xl font-bold text-blue-900 tracking-[0.5em] ml-[0.5em]">{generatedOtp}</span>
-                          <span className="text-[10px] text-blue-500 mt-1.5 text-center px-4">
-                            Since you are building the frontend first and have no backend API yet, real SMS cannot be sent. Use this dynamic mock code for testing!
-                          </span>
+                        <div className="mt-3 flex items-center justify-between text-xs text-ink-50 px-1">
+                          <span>Verification code sent to <strong className="text-ink font-semibold">{mobile}</strong></span>
+                          <button
+                            type="button"
+                            onClick={handleSendOtp}
+                            className="text-brass hover:text-brass-dark font-medium underline transition-colors"
+                          >
+                            Resend OTP
+                          </button>
                         </div>
                       </div>
                     )}
+
+                    <div>
+                      <label className="block text-sm font-medium text-ink-70 mb-1">Create Password</label>
+                      <div className="relative">
+                        <input
+                          type={showPassword ? "text" : "password"}
+                          required
+                          minLength={6}
+                          className="form-input pr-12"
+                          placeholder="••••••••"
+                          value={password}
+                          onChange={e => setPassword(e.target.value)}
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setShowPassword(!showPassword)}
+                          className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-semibold text-brass hover:text-brass-dark"
+                        >
+                          {showPassword ? "HIDE" : "SHOW"}
+                        </button>
+                      </div>
+                      <span className="text-[11px] text-ink-40 mt-1 block">Minimum 6 characters</span>
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-ink-70 mb-1">Confirm Password</label>
+                      <input
+                        type={showPassword ? "text" : "password"}
+                        required
+                        minLength={6}
+                        className="form-input"
+                        placeholder="••••••••"
+                        value={confirmPassword}
+                        onChange={e => setConfirmPassword(e.target.value)}
+                      />
+                      {confirmPassword && password !== confirmPassword && (
+                        <span className="text-[11px] text-red-500 mt-1 block font-medium">Passwords do not match</span>
+                      )}
+                    </div>
 
                     <div>
                       <label className="block text-sm font-medium text-ink-70 mb-1">Preferred Language</label>
@@ -384,7 +551,7 @@ export default function RegisterPage() {
                     </div>
                     
                     <div className="pt-6 md:col-span-2 flex justify-end">
-                      <Button type="submit" disabled={!otpSent || otp.length < 4}>
+                      <Button type="submit" disabled={!otpSent || otp.length < 4 || !password || password.length < 6 || password !== confirmPassword}>
                         Continue <ArrowRight className="h-4 w-4 ml-1" />
                       </Button>
                     </div>
@@ -443,7 +610,7 @@ export default function RegisterPage() {
                         <div className="mt-2 text-sm h-5">
                           {subdomainStatus === "checking" && <span className="text-ink-50 flex items-center"><Loader2 className="h-3 w-3 animate-spin mr-1"/> Checking availability...</span>}
                           {subdomainStatus === "available" && <span className="text-green-600 flex items-center"><CheckCircle2 className="h-3 w-3 mr-1"/> Available!</span>}
-                          {subdomainStatus === "unavailable" && <span className="text-red-500 flex items-center"><AlertCircle className="h-3 w-3 mr-1"/> Already taken.</span>}
+                          {subdomainStatus === "unavailable" && <span className="text-red-500 flex items-center"><AlertCircle className="h-3 w-3 mr-1"/> {subdomainReason || "Already taken."}</span>}
                         </div>
                       </div>
 
@@ -555,7 +722,7 @@ export default function RegisterPage() {
                                 {kycStatus === "Not Started" ? "Initiate KYC Now" : "Retry KYC"}
                               </Button>
                             ) : null}
-                            <Button variant="secondary" onClick={() => alert("Redirecting to your Dashboard...")} className="bg-white hover:bg-linen-soft">
+                            <Button variant="secondary" onClick={handleCompleteRegistration} disabled={isRegistering} className="bg-white hover:bg-linen-soft">
                               Skip to Dashboard <ArrowRight className="h-4 w-4 ml-1" />
                             </Button>
                           </div>

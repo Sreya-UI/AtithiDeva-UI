@@ -44,23 +44,23 @@ export default function SolutionsPage() {
         lede="Room-led, food-led and event-led properties use different parts of AtithiDeva heavily. Nothing is bolted on for any of them — the emphasis simply moves."
       />
 
-      <Section tone="ivory">
+      <Section tone="ivory" className="py-16 sm:py-20 lg:py-24">
         <Container>
           <ul className="grid gap-6 lg:grid-cols-2">
             {solutionSegments.map((segment, index) => (
-              <li key={segment.title}>
+              <li key={segment.title} className="flex">
                 <Reveal
                   index={index % 2}
-                  className="flex h-full flex-col rounded-2xl border border-linen bg-paper p-8 lg:p-10"
+                  className="flex h-full w-full flex-col rounded-3xl border border-linen bg-paper p-8 lg:p-10 shadow-lift transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:border-brass-soft/70"
                 >
-                  <h2 className="optical-text text-[1.4rem] font-medium">{segment.title}</h2>
-                  <p className="mt-3 text-[0.97rem] leading-[1.65] text-ink-70">{segment.body}</p>
+                  <h2 className="optical-text text-[1.45rem] font-bold text-ink">{segment.title}</h2>
+                  <p className="mt-3 text-[0.98rem] leading-[1.65] text-ink-70">{segment.body}</p>
 
-                  <ul className="mt-auto flex flex-wrap gap-2 pt-8">
+                  <ul className="mt-auto flex flex-wrap gap-2.5 pt-8">
                     {segment.points.map((point) => (
                       <li
                         key={point}
-                        className="rounded-full border border-linen bg-ivory px-3.5 py-1.5 text-[0.8rem] text-ink-50"
+                        className="rounded-full border border-linen-soft bg-sand/40 px-3.5 py-1.5 text-[0.82rem] font-medium text-ink-70"
                       >
                         {point}
                       </li>
@@ -73,7 +73,7 @@ export default function SolutionsPage() {
         </Container>
       </Section>
 
-      <Section id="rollout" tone="paper" rule>
+      <Section id="rollout" tone="paper" rule className="py-16 sm:py-20 lg:py-24">
         <Container>
           <SectionHeading
             marker="Rollout"
@@ -81,26 +81,31 @@ export default function SolutionsPage() {
             lede="A property is live once its masters are loaded and one complete guest cycle has been run end to end."
           />
 
-          <ol className="mt-14 grid gap-px overflow-hidden rounded-2xl border border-linen bg-linen sm:grid-cols-2">
+          <ol className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {rollout.map((step, index) => (
-              <li key={step.title} className="bg-paper">
-                <Reveal index={index % 2} className="h-full p-8 lg:p-10">
-                  <span
-                    data-numeric
-                    aria-hidden
-                    className="text-[0.82rem] text-brass"
-                  >
-                    {String(index + 1).padStart(2, "0")}
-                  </span>
-                  <h3 className="optical-text mt-4 text-[1.22rem] font-medium">{step.title}</h3>
-                  <p className="mt-3 text-[0.93rem] leading-[1.65] text-ink-70">{step.body}</p>
+              <li key={step.title} className="flex">
+                <Reveal index={index % 4} className="flex h-full w-full flex-col rounded-2xl border border-linen bg-ivory/60 p-7 lg:p-8 shadow-sm transition-all duration-300 hover:bg-paper hover:shadow-xl hover:border-brass-soft/70 hover:-translate-y-1">
+                  <div className="flex items-center justify-between">
+                    <span
+                      data-numeric
+                      aria-hidden
+                      className="font-display text-[1.5rem] font-bold text-brass"
+                    >
+                      {String(index + 1).padStart(2, "0")}
+                    </span>
+                    <span className="size-2 rounded-full bg-brass-soft/50" />
+                  </div>
+                  <h3 className="optical-text mt-4 text-[1.2rem] font-bold text-ink">{step.title}</h3>
+                  <p className="mt-3 text-[0.93rem] leading-[1.65] text-ink-70 flex-1">{step.body}</p>
                 </Reveal>
               </li>
             ))}
           </ol>
 
           <Reveal index={2} className="mt-12">
-            <ButtonLink href="/contact">Talk through your rollout</ButtonLink>
+            <ButtonLink href="/contact" className="shadow-[0_4px_14px_rgba(25,58,107,0.35)]">
+              Talk through your rollout
+            </ButtonLink>
           </Reveal>
         </Container>
       </Section>

@@ -36,7 +36,7 @@ export function Restaurant() {
   return (
     <section
       id="restaurant"
-      className="scroll-mt-24 border-t border-linen py-12 sm:py-16 lg:py-20"
+      className="scroll-mt-24 border-t border-linen py-10 sm:py-12 lg:py-14"
     >
       <Container>
         <div className="grid gap-12 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:gap-16">

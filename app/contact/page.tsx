@@ -1,4 +1,4 @@
-import { Mail, MapPin, Phone } from "lucide-react";
+import { Mail, MapPin, Phone, ShieldCheck, Clock, Users } from "lucide-react";
 import { Container } from "@/components/common/Container";
 import { Reveal } from "@/components/common/Reveal";
 import { Section } from "@/components/common/Section";
@@ -25,68 +25,72 @@ export default function ContactPage() {
         lede="A walkthrough works best when it follows your own operation — your room types, your meal plans, the way your day currently closes."
       />
 
-      <Section tone="paper">
+      <Section tone="paper" className="py-16 sm:py-20">
         <Container>
-          <div className="grid gap-12 lg:grid-cols-12 lg:gap-16">
+          <div className="grid gap-12 lg:grid-cols-12 lg:gap-16 items-start">
             <div className="lg:col-span-7">
               <DemoForm />
             </div>
 
-            <div className="lg:col-span-5">
-              <Reveal>
-                <h2 className="optical-text text-[1.25rem] font-medium">Other ways to reach us</h2>
-                <p className="mt-3 text-[0.95rem] leading-[1.65] text-ink-70">
-                  Documentation and support requests go to the same inbox. Anything about an
-                  existing installation is best raised by phone.
-                </p>
-              </Reveal>
+            <div className="lg:col-span-5 space-y-6">
+              <div className="rounded-3xl border border-linen bg-ivory/60 p-7 lg:p-8 shadow-lift">
+                <Reveal>
+                  <h2 className="optical-text text-[1.3rem] font-bold text-ink">What to expect</h2>
+                  <ul className="mt-4 space-y-3.5 text-[0.92rem] text-ink-70">
+                    <li className="flex items-start gap-3">
+                      <Users className="size-4 text-brass mt-1 shrink-0" />
+                      <span>Direct walkthrough with a hospitality system architect</span>
+                    </li>
+                    <li className="flex items-start gap-3">
+                      <Clock className="size-4 text-brass mt-1 shrink-0" />
+                      <span>Customized to your room inventory & food service model</span>
+                    </li>
+                    <li className="flex items-start gap-3">
+                      <ShieldCheck className="size-4 text-brass mt-1 shrink-0" />
+                      <span>Prompt response within 24 hours</span>
+                    </li>
+                  </ul>
+                </Reveal>
 
-              <Reveal index={1}>
-                <dl className="mt-9 space-y-6 border-t border-linen pt-9">
-                  <div className="flex gap-4">
-                    <Mail aria-hidden className="mt-0.5 size-[1.05rem] text-brass" strokeWidth={1.5} />
-                    <div>
-                      <dt className="text-[0.8rem] text-ink-50">Email</dt>
-                      <dd className="mt-1">
-                        <a
-                          href={`mailto:${site.contact.email}`}
-                          className="text-[0.97rem] text-ink underline decoration-brass-soft underline-offset-4 hover:text-brass"
-                        >
-                          {site.contact.email}
-                        </a>
-                      </dd>
+                <Reveal index={1}>
+                  <dl className="mt-8 space-y-5 border-t border-linen pt-7">
+                    <div className="flex gap-4">
+                      <Mail aria-hidden className="mt-0.5 size-[1.1rem] text-brass" strokeWidth={1.8} />
+                      <div>
+                        <dt className="text-[0.76rem] font-semibold uppercase tracking-wider text-ink-50">Email</dt>
+                        <dd className="mt-0.5">
+                          <a
+                            href={`mailto:${site.contact.email}`}
+                            className="text-[0.97rem] font-medium text-ink underline decoration-brass-soft underline-offset-4 hover:text-brass"
+                          >
+                            {site.contact.email}
+                          </a>
+                        </dd>
+                      </div>
                     </div>
-                  </div>
 
-                  <div className="flex gap-4">
-                    <Phone aria-hidden className="mt-0.5 size-[1.05rem] text-brass" strokeWidth={1.5} />
-                    <div>
-                      <dt className="text-[0.8rem] text-ink-50">Phone</dt>
-                      <dd data-numeric className="mt-1 text-[0.97rem] text-ink">
-                        {site.contact.phone}
-                      </dd>
+                    <div className="flex gap-4">
+                      <Phone aria-hidden className="mt-0.5 size-[1.1rem] text-brass" strokeWidth={1.8} />
+                      <div>
+                        <dt className="text-[0.76rem] font-semibold uppercase tracking-wider text-ink-50">Phone</dt>
+                        <dd data-numeric className="mt-0.5 text-[0.97rem] font-medium text-ink">
+                          {site.contact.phone}
+                        </dd>
+                      </div>
                     </div>
-                  </div>
 
-                  <div className="flex gap-4">
-                    <MapPin aria-hidden className="mt-0.5 size-[1.05rem] text-brass" strokeWidth={1.5} />
-                    <div>
-                      <dt className="text-[0.8rem] text-ink-50">Based in</dt>
-                      <dd className="mt-1 text-[0.97rem] text-ink">
-                        {site.contact.addressLocality}, {site.contact.addressRegion}
-                      </dd>
+                    <div className="flex gap-4">
+                      <MapPin aria-hidden className="mt-0.5 size-[1.1rem] text-brass" strokeWidth={1.8} />
+                      <div>
+                        <dt className="text-[0.76rem] font-semibold uppercase tracking-wider text-ink-50">Based in</dt>
+                        <dd className="mt-0.5 text-[0.97rem] font-medium text-ink">
+                          {site.contact.addressLocality}, {site.contact.addressRegion}
+                        </dd>
+                      </div>
                     </div>
-                  </div>
-                </dl>
-              </Reveal>
-
-              <Reveal index={2}>
-                <p className="mt-9 rounded-xl border border-linen bg-ivory p-5 text-[0.82rem] leading-relaxed text-ink-50">
-                  Contact details on this page are placeholders held in{" "}
-                  <code className="text-ink-70">lib/site.ts</code>. Replace them with your real
-                  business details before the site goes live.
-                </p>
-              </Reveal>
+                  </dl>
+                </Reveal>
+              </div>
             </div>
           </div>
         </Container>

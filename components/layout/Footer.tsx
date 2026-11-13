@@ -19,14 +19,27 @@ export function Footer() {
               same building, and want them to close out of the same books.
             </p>
             <SocialLinks className="mt-6" />
-            <p className="mt-6 text-[0.88rem] text-ivory/60">
-              <a
-                href={`mailto:${site.contact.email}`}
-                className="underline-offset-4 transition-colors hover:text-ivory hover:underline"
-              >
-                {site.contact.email}
-              </a>
-            </p>
+            <div className="mt-6 space-y-2 text-[0.88rem] text-ivory/65">
+              <p>
+                <a
+                  href={`mailto:${site.contact.email}`}
+                  className="underline-offset-4 transition-colors hover:text-ivory hover:underline"
+                >
+                  {site.contact.email}
+                </a>
+              </p>
+              <p>
+                <a
+                  href={`tel:${site.contact.phone.replace(/\s+/g, "")}`}
+                  className="underline-offset-4 transition-colors hover:text-ivory hover:underline"
+                >
+                  {site.contact.phone}
+                </a>
+              </p>
+              <p className="text-[0.82rem] leading-relaxed text-ivory/50 pt-1">
+                {site.contact.fullAddress}
+              </p>
+            </div>
           </div>
 
           <div className="grid grid-cols-2 gap-x-6 gap-y-10 sm:grid-cols-4">

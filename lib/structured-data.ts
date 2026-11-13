@@ -9,10 +9,13 @@ export const organizationSchema = {
   url: site.url,
   description: site.description,
   email: site.contact.email,
+  telephone: site.contact.phone,
   address: {
     "@type": "PostalAddress",
+    streetAddress: site.contact.streetAddress,
     addressLocality: site.contact.addressLocality,
     addressRegion: site.contact.addressRegion,
+    postalCode: site.contact.postalCode,
     addressCountry: site.contact.addressCountry,
   },
 };

@@ -74,7 +74,9 @@ export default function ContactPage() {
                       <div>
                         <dt className="text-[0.76rem] font-semibold uppercase tracking-wider text-ink-50">Phone</dt>
                         <dd data-numeric className="mt-0.5 text-[0.97rem] font-medium text-ink">
-                          {site.contact.phone}
+                          <a href={`tel:${site.contact.phone.replace(/\s+/g, "")}`} className="hover:text-brass">
+                            {site.contact.phone}
+                          </a>
                         </dd>
                       </div>
                     </div>
@@ -82,9 +84,9 @@ export default function ContactPage() {
                     <div className="flex gap-4">
                       <MapPin aria-hidden className="mt-0.5 size-[1.1rem] text-brass" strokeWidth={1.8} />
                       <div>
-                        <dt className="text-[0.76rem] font-semibold uppercase tracking-wider text-ink-50">Based in</dt>
-                        <dd className="mt-0.5 text-[0.97rem] font-medium text-ink">
-                          {site.contact.addressLocality}, {site.contact.addressRegion}
+                        <dt className="text-[0.76rem] font-semibold uppercase tracking-wider text-ink-50">Address</dt>
+                        <dd className="mt-0.5 text-[0.97rem] font-medium text-ink leading-relaxed">
+                          {site.contact.fullAddress}
                         </dd>
                       </div>
                     </div>

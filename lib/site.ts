@@ -12,8 +12,11 @@ export const site = {
   locale: "en_IN",
   contact: {
     // Placeholders — update in lib/site.ts.
-    email: "hello@atithideva.com",
-    phone: "+91 00000 00000",
+    email: "icare@xcelcure.com",
+    phone: "+91 9051877716",
+    streetAddress: "Module-118, SDF Building, GP Block, Sector V, Bidhannagar",
+    postalCode: "700091",
+    fullAddress: "Module-118, SDF Building, GP Block, Sector V, Bidhannagar, Kolkata, West Bengal - 700091",
     addressLocality: "Kolkata",
     addressRegion: "West Bengal",
     addressCountry: "IN",
@@ -22,7 +25,7 @@ export const site = {
   social: {
     facebook: "https://facebook.com/atithideva",
     instagram: "https://instagram.com/atithideva",
-    whatsapp: "https://wa.me/910000000000",
+    whatsapp: "https://wa.me/919051877716",
     linkedin: "https://linkedin.com/company/atithideva",
     youtube: "https://youtube.com/@atithideva",
   },

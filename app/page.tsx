@@ -12,6 +12,7 @@ import { Housekeeping } from "@/components/home/Housekeeping";
 import { HowItWorks } from "@/components/home/HowItWorks";
 import { MasterData } from "@/components/home/MasterData";
 import { Principles } from "@/components/home/Principles";
+import { VideoWalkthrough } from "@/components/home/VideoWalkthrough";
 import { QuotationFlow } from "@/components/home/QuotationFlow";
 import { Restaurant } from "@/components/home/Restaurant";
 import { RoomManagement } from "@/components/home/RoomManagement";
@@ -25,6 +26,7 @@ export default function HomePage() {
       <Hero />
       <Marquee />
       <Principles />
+      <VideoWalkthrough />
       <HotelShowcase />
       <QuotationFlow />
       <RoomManagement />

@@ -1,4 +1,4 @@
-import { Mail, MapPin, Phone, ShieldCheck, Clock, Users } from "lucide-react";
+import { Mail, MapPin, Phone, ShieldCheck, Clock, Users, Sparkles, Film } from "lucide-react";
 import { Container } from "@/components/common/Container";
 import { Reveal } from "@/components/common/Reveal";
 import { Section } from "@/components/common/Section";
@@ -92,6 +92,37 @@ export default function ContactPage() {
                     </div>
                   </dl>
                 </Reveal>
+              </div>
+
+              {/* Instant Guided Walkthrough Video Card */}
+              <div className="rounded-3xl border border-brass-soft/40 bg-navy text-white p-6 sm:p-7 shadow-lift overflow-hidden relative">
+                <div aria-hidden className="pointer-events-none absolute -right-10 -top-10 h-36 w-36 rounded-full bg-brass/15 blur-2xl" />
+                <div className="relative z-10">
+                  <div className="inline-flex items-center gap-1.5 rounded-full bg-brass/20 border border-brass/30 px-3 py-1 text-[0.72rem] font-semibold text-brass mb-3">
+                    <Sparkles className="h-3 w-3" />
+                    <span>Instant Self-Serve Demo</span>
+                  </div>
+                  <h3 className="optical-text text-[1.2rem] font-bold text-white">
+                    Can&apos;t wait for a live call?
+                  </h3>
+                  <p className="mt-2 text-[0.88rem] leading-relaxed text-white/80">
+                    Watch the complete 4-minute guided walkthrough of AtithiDeva right now.
+                  </p>
+
+                  {/* Embedded Video player */}
+                  <div className="mt-4 relative aspect-video w-full rounded-2xl overflow-hidden border border-white/15 bg-black shadow-inner">
+                    <video
+                      src="/videos/demo_hotel_2.mp4"
+                      controls
+                      playsInline
+                      preload="metadata"
+                      className="h-full w-full object-contain"
+                    />
+                  </div>
+                  <p className="mt-2.5 text-[0.74rem] text-white/60 text-center">
+                    Full System Tour • 4 min 11 sec
+                  </p>
+                </div>
               </div>
             </div>
           </div>

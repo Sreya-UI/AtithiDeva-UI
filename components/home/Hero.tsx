@@ -1,12 +1,13 @@
 "use client";
 import { useEffect, useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
-import { ArrowRight, Sparkles } from "lucide-react";
+import { ArrowRight, Sparkles, Play } from "lucide-react";
 import { AnimatedCounter } from "@/components/common/AnimatedCounter";
 import { ButtonLink } from "@/components/common/Button";
 import { Container } from "@/components/common/Container";
 import { DemoNote } from "@/components/common/DemoNote";
 import { HeroImageScroll } from "@/components/home/HeroImageScroll";
+import { VideoModal } from "@/components/home/VideoModal";
 
 const occupancySplit = [
   { label: "Available", value: 24, className: "text-state-available", dotColor: "bg-emerald-500", pingColor: "bg-emerald-400" },
@@ -18,6 +19,7 @@ const occupancySplit = [
 export function Hero() {
   const reduceMotion = useReducedMotion();
   const [hotelName, setHotelName] = useState<string>("");
+  const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -112,6 +114,16 @@ export function Hero() {
                 Request a demo
                 <ArrowRight aria-hidden className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
               </ButtonLink>
+              <button
+                type="button"
+                onClick={() => setIsVideoModalOpen(true)}
+                className="inline-flex h-11 items-center justify-center gap-2.5 rounded-full border border-brass-soft/80 bg-paper px-5 text-[0.88rem] font-medium text-navy transition-all duration-300 hover:scale-[1.03] hover:border-navy hover:bg-navy-wash active:scale-[0.98] shadow-sm group"
+              >
+                <span className="flex h-6 w-6 items-center justify-center rounded-full bg-brass/20 text-brass group-hover:bg-brass group-hover:text-navy transition-colors">
+                  <Play className="h-3 w-3 translate-x-0.5 fill-current" />
+                </span>
+                <span>Watch 1-Min Tour</span>
+              </button>
               <ButtonLink href="/#quotations" variant="secondary" className="hover:border-navy/30">
                 See how a quotation works
               </ButtonLink>
@@ -156,6 +168,8 @@ export function Hero() {
           </motion.div>
         </div>
       </Container>
+
+      <VideoModal isOpen={isVideoModalOpen} onClose={() => setIsVideoModalOpen(false)} />
     </section>
   );
 }

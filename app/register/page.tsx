@@ -1,11 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { CheckCircle2, Building2, MapPin, Loader2, ArrowRight, ArrowLeft, ShieldCheck, AlertCircle, ImageIcon, ChevronDown } from "lucide-react";
 import { Reveal } from "@/components/common/Reveal";
 import { Button } from "@/components/common/Button";
+import { TextCaptcha, TextCaptchaHandle } from "@/components/common/TextCaptcha";
 
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:5093/api";
 
@@ -122,6 +123,10 @@ export default function RegisterPage() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const captchaRef = useRef<TextCaptchaHandle | null>(null);
+  const [captchaInput, setCaptchaInput] = useState("");
+  const [captchaError, setCaptchaError] = useState<string | null>(null);
+  const [captchaVerificationToken, setCaptchaVerificationToken] = useState("");
     const [name, setName] = useState("");
   const [language, setLanguage] = useState("en");
   const [timezone, setTimezone] = useState("Asia/Kolkata");
@@ -173,6 +178,14 @@ export default function RegisterPage() {
         return;
       }
 
+      const captchaResult = await captchaRef.current?.verify();
+      if (!captchaResult?.ok || !captchaResult.token) {
+        setCaptchaError(captchaResult?.error || "Incorrect CAPTCHA code. Please try again.");
+        return;
+      }
+      setCaptchaError(null);
+      setCaptchaVerificationToken(captchaResult.token);
+
       // TESTING MODE: OTP verification is completely optional
       if (otpSent && otp && otp.trim().length >= 4) {
         try {
@@ -200,7 +213,15 @@ export default function RegisterPage() {
   };
 
   const handleBack = () => {
-    if (currentStep > 1) setCurrentStep(currentStep - 1);
+    if (currentStep > 1) {
+      const prevStep = currentStep - 1;
+      if (prevStep === 1) {
+        setCaptchaVerificationToken("");
+        setCaptchaInput("");
+        setCaptchaError(null);
+      }
+      setCurrentStep(prevStep);
+    }
   };
 
   const handleSendOtp = async () => {
@@ -316,6 +337,7 @@ export default function RegisterPage() {
           kycType: kycType,
           kycNumber: kycNumber || null,
           password: password || "Password@123",
+          captchaVerificationToken: captchaVerificationToken || null,
         }),
       });
       const data = await res.json();
@@ -553,6 +575,19 @@ export default function RegisterPage() {
                       )}
                     </div>
 
+                    <div className="md:col-span-2">
+                      <TextCaptcha
+                        ref={captchaRef}
+                        apiBase={API_BASE}
+                        value={captchaInput}
+                        onChange={(val) => {
+                          setCaptchaInput(val);
+                          if (captchaError) setCaptchaError(null);
+                        }}
+                        error={captchaError}
+                      />
+                    </div>
+
                     <div>
                       <label className="block text-sm font-medium text-ink-70 mb-1">Preferred Language</label>
                       <select className="form-input" value={language} onChange={e => setLanguage(e.target.value)}>
@@ -571,7 +606,7 @@ export default function RegisterPage() {
                     </div>
                     
                     <div className="pt-6 md:col-span-2 flex justify-end">
-                      <Button type="submit" disabled={!name.trim() || !email.trim() || !mobile || mobile.length < 6 || !password || password.length < 6 || password !== confirmPassword}>
+                      <Button type="submit" disabled={!name.trim() || !email.trim() || !mobile || mobile.length < 6 || !password || password.length < 6 || password !== confirmPassword || captchaInput.trim().length < 6}>
                         Continue <ArrowRight className="h-4 w-4 ml-1" />
                       </Button>
                     </div>
